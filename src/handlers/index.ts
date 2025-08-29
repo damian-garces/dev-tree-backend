@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import User from "../models/User";
 import { hashPassword } from "../utils/auth";
+import slug from "slug";
 
 export const createAccount = async (req: Request, res: Response) => {
   try {
@@ -12,8 +13,16 @@ export const createAccount = async (req: Request, res: Response) => {
       return res.status(409).send('User already exists');
     }
 
+    const handle = slug(req.body.handle, "");
+    const handleExist = await User.findOne({ handle });
+
+    if (handleExist) {
+      return res.status(409).send('Handle already exists');
+    }
+
     const user = new User(req.body);
     user.password = await hashPassword(password);
+    user.handle = handle;
     await user.save();
     res.status(201).send('User created successfully');
   } catch (error) {
