@@ -2,16 +2,9 @@ import { Request, Response } from "express";
 import User from "../models/User";
 import { comparePassword, hashPassword } from "../utils/auth";
 import slug from "slug";
-import { validationResult } from "express-validator";
 
 export const createAccount = async (req: Request, res: Response) => {
   try {
-
-    // Validation Handlers
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
 
     const { email, password } = req.body;
     const userExist = await User.findOne({ email });
@@ -39,12 +32,6 @@ export const createAccount = async (req: Request, res: Response) => {
 
 export const login =  async (req: Request, res: Response) => {
   try {
-    
-    // Validation Handlers
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
 
     const { email, password } = req.body;
     const user = await User.findOne({ email });

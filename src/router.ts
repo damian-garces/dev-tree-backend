@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { body } from 'express-validator';
 import { createAccount, login } from './handlers';
+import { validateRequest } from './middleware/validations';
 
 const router = Router();
 
@@ -10,11 +11,13 @@ router.post('/auth/register',
   body('email').isEmail().withMessage('Must be a valid email address'),
   body('password').isLength({ min: 6 }).withMessage('Must be at least 6 characters long'),
   body('handle').notEmpty().withMessage('Handle is required'),
+  validateRequest,
   createAccount);
 
 router.post('/auth/login',
   body('email').isEmail().withMessage('Must be a valid email address'),
   body('password').isLength({ min: 6 }),
+  validateRequest,
   login);
 
 export default router
