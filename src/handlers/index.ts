@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import User from "../models/User";
 import { comparePassword, hashPassword } from "../utils/auth";
 import slug from "slug";
+import { generateJWT } from "../utils/jwt";
 
 export const createAccount = async (req: Request, res: Response) => {
   try {
@@ -46,8 +47,10 @@ export const login =  async (req: Request, res: Response) => {
       return res.status(401).send('Invalid email or password');
     }
 
+    const token = generateJWT({ id: user._id });
+
     console.log("Login successful:", user);
-    res.status(200).send('Login successful');
+    res.status(200).send({ token });
 
   } catch (error) {
     console.error("Error logging in:", error);
