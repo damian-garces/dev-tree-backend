@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { body } from 'express-validator';
-import { createAccount, login } from './handlers';
+import { createAccount, getUser, login } from './handlers';
 import { validateRequest } from './middleware/validations';
 
 const router = Router();
@@ -19,5 +19,7 @@ router.post('/auth/login',
   body('password').isLength({ min: 6 }),
   validateRequest,
   login);
+
+router.get('/user', getUser);
 
 export default router
