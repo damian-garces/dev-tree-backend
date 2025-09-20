@@ -3,7 +3,6 @@ import User from "../models/User";
 import { comparePassword, hashPassword } from "../utils/auth";
 import slug from "slug";
 import { generateJWT } from "../utils/jwt";
-import jwt from "jsonwebtoken";
 
 export const createAccount = async (req: Request, res: Response) => {
   try {
@@ -60,32 +59,5 @@ export const login =  async (req: Request, res: Response) => {
 };
 
 export const getUser = async (req: Request, res: Response) => {
-  const bearer = req.headers.authorization;
-  if (!bearer || !bearer.startsWith('Bearer ')) {
-    const error = new Error('Unauthorized');    
-    return res.status(401).json({error: error.message});
-  }
-
-  const [, token] = bearer.split(' ');
-  if (!token) {
-    const error = new Error('Unauthorized');
-    return res.status(401).json({error: error.message});
-  }
-
-  try {
-    const result =  jwt.verify(token, process.env.JWT_SECRET!);
-    if (result && typeof result === 'object' && result.id) {
-      const user = await User.findById(result.id).select('-password -__v -createdAt -updatedAt');
-
-      if (!user) {
-        const error = new Error('User not found');
-        return res.status(404).json({error: error.message});
-      }
-      return res.status(200).json(user);
-    }
-  } catch (error) {
-    const err = new Error('Unauthorized');
-    console.error(error);
-    return res.status(401).json({error: err.message});
-  }
+  res.json(req.user);
 }
