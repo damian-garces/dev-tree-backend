@@ -81,7 +81,7 @@ export const updateProfile = async (req: Request, res: Response) => {
 
     await req.user.save();
 
-    return res.status(200).json({message: "Profile updated successfully"});
+    return res.status(200).send("Profile updated successfully");
   } catch (e) {
     console.error(e);
     const error = new Error('Error updating profile');
