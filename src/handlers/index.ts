@@ -3,6 +3,9 @@ import User from "../models/User";
 import { comparePassword, hashPassword } from "../utils/auth";
 import slug from "slug";
 import { generateJWT } from "../utils/jwt";
+import formidable from "formidable";
+import cloudinary from "../config/cloudinary";
+import { v4 as uuidv4 } from 'uuid';
 
 export const createAccount = async (req: Request, res: Response) => {
   try {
@@ -85,6 +88,32 @@ export const updateProfile = async (req: Request, res: Response) => {
   } catch (e) {
     console.error(e);
     const error = new Error('Error updating profile');
+    return res.status(400).json({error: error.message});
+  }
+}
+
+export const uploadImage = async (req: Request, res: Response) => {
+  const form = formidable({ multiples: false });
+
+  try {
+    form.parse(req, async (err, fields, files) => {
+      cloudinary.uploader.upload(files.file[0].filepath, { public_id: uuidv4() }, async (error, result) => {
+        if (error) {
+          console.error("Cloudinary upload error:", error);
+          return res.status(500).send('Error uploading image');
+        }
+        console.log("Cloudinary upload successful:", result);
+        if (result && result.secure_url) {
+          console.log("Cloudinary upload result:", result.secure_url);
+          req.user.imageUrl = result.secure_url;
+          await req.user.save();
+          return res.status(200).json({ imageUrl: result.secure_url });
+        }
+      });
+    });
+  } catch (e) {
+    console.error(e);
+    const error = new Error('Error uploading image');
     return res.status(400).json({error: error.message});
   }
 }
