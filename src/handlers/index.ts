@@ -97,7 +97,7 @@ export const uploadImage = async (req: Request, res: Response) => {
 
   try {
     form.parse(req, async (err, fields, files) => {
-      cloudinary.uploader.upload(files.file[0].filepath, { public_id: uuidv4() }, async (error, result) => {
+      cloudinary.uploader.upload(files.image[0].filepath, { public_id: uuidv4() }, async (error, result) => {
         if (error) {
           console.error("Cloudinary upload error:", error);
           return res.status(500).send('Error uploading image');
