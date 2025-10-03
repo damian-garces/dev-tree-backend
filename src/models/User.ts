@@ -7,6 +7,7 @@ export interface IUser extends Document {
   password: string;
   description?: string;
   imageUrl?: string;
+  links: string;
 }
 
 const userSchema = new Schema({
@@ -41,6 +42,10 @@ const userSchema = new Schema({
   imageUrl: { 
     type: String, 
     default: "" 
+  },
+  links: { 
+    type: String, 
+    default: []
   }
 }, { timestamps: true });
 
