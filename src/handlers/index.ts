@@ -27,9 +27,11 @@ export const createAccount = async (req: Request, res: Response) => {
     const user = new User(req.body);
     user.password = await hashPassword(password);
     user.handle = handle;
+    user.links = "[]";
     await user.save();
     res.status(201).send('User created successfully');
   } catch (error) {
+    console.error("Error creating user:", error);
     res.status(400).send('Error creating user');
   }
 };
