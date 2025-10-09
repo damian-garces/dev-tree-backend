@@ -134,3 +134,20 @@ export const getUserByHandle = async (req: Request, res: Response) => {
     return res.status(500).json({error: error.message});
   }
 }
+
+export const searchByHandle = async (req: Request, res: Response) => {
+  try {
+    const { handle } = req.body;
+    console.log("Searching for handle:", handle);
+    const user = await User.findOne({ handle }).select('-password -email -__v');
+    if (user) {
+      const error = new Error('User already exists');
+      return res.status(409).json({error: error.message});
+    }
+    res.status(200).send(`${handle} is available`);
+  } catch (e) {
+    console.error(e);
+    const error = new Error('Error searching user by handle');
+    return res.status(500).json({error: error.message});
+  }
+}

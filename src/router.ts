@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { body } from 'express-validator';
-import { createAccount, getUser, getUserByHandle, login, updateProfile, uploadImage } from './handlers';
+import { createAccount, getUser, getUserByHandle, login, searchByHandle, updateProfile, uploadImage } from './handlers';
 import { validateRequest } from './middleware/validations';
 import { authenticate } from './middleware/auth';
 
@@ -25,7 +25,6 @@ router.get('/user', authenticate, getUser);
 
 router.patch('/user',
   body('handle').exists().withMessage('Handle is required').notEmpty().withMessage('Handle cannot be empty'),
-  body('description').exists().withMessage('Description is required').notEmpty().withMessage('Description cannot be empty'),
   authenticate, 
   validateRequest,
   updateProfile);
@@ -36,5 +35,10 @@ router.post('/user/image',
 
 router.get('/:handle',
   getUserByHandle);
+
+router.post('/search',
+  body('handle').exists().withMessage('Handle is required').notEmpty().withMessage('Handle cannot be empty'),
+  validateRequest,
+  searchByHandle);
 
 export default router
