@@ -6,6 +6,10 @@ Backend project in Node.js with Express and TypeScript for user management, regi
 
 ## English
 
+### Deployment
+
+This project is deployed on [Render](https://render.com/), providing reliable and scalable hosting for the backend services.
+
 ### Installation
 
 ```bash
@@ -55,6 +59,10 @@ npm install
 ---
 
 ## Español
+
+### Despliegue
+
+Este proyecto está desplegado en [Render](https://render.com/), proporcionando un hosting confiable y escalable para los servicios del backend.
 
 ### Instalación
 
